@@ -2,13 +2,9 @@ package arcnode.reshack.mod;
 
 import arcnode.reshack.common.ConfigData;
 import arcnode.reshack.common.Networking;
-import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.*;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +17,9 @@ public final class ResourceHack {
     public static final Logger LOG = LoggerFactory.getLogger("ResourceHack");
 
     @Getter
-    private static final ResourceLocation channelConfig = new ResourceLocation("reshack", Networking.CHANNEL_CONFIG);
+    private static final ResourceLocation channelConfig = ResourceLocation.fromNamespaceAndPath("reshack", Networking.CHANNEL_CONFIG);
     @Getter
-    private static final ResourceLocation channelReset = new ResourceLocation("reshack", Networking.CHANNEL_RESET);
+    private static final ResourceLocation channelReset = ResourceLocation.fromNamespaceAndPath("reshack", Networking.CHANNEL_RESET);
 
     @Getter
     @Setter
@@ -38,13 +34,12 @@ public final class ResourceHack {
 
     public static void sendRequest() {
         LOG.info("Sending configuration request");
-        Minecraft.getInstance().getConnection().send(new ServerboundCustomPayloadPacket(
-                channelConfig,
-                new FriendlyByteBuf(Unpooled.buffer())
-        ));
+
+        // TODO: refactor
     }
 
     public static boolean configure(ClientboundCustomPayloadPacket packet) {
+        /*
         if (packet.getIdentifier().equals(ResourceHack.getChannelConfig())) {
             setConfig(Networking.read(packet.getData()));
             return true;
@@ -52,6 +47,9 @@ public final class ResourceHack {
             ResourceHack.getLoadedUrls().clear();
             return true;
         }
+         */
+
+        // TODO: refactor
         return false;
     }
 
