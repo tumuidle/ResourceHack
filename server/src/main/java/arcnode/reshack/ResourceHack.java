@@ -3,20 +3,20 @@ package arcnode.reshack;
 import arcnode.reshack.common.ConfigData;
 import arcnode.reshack.common.Networking;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListener;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPluginMessage;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPluginMessage;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
+import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.jetbrains.annotations.NotNull;
 
-public class ResourceHack extends JavaPlugin implements PacketListener {
+public class ResourceHack extends JavaPlugin implements PluginMessageListener {
     private static final String CONFIG_CHANNEL = "%s:%s".formatted(Networking.NAMESPACE, Networking.CHANNEL_CONFIG);
+    private static final String CONFIG_REQUEST_CHANNEL = "%s:%s".formatted(Networking.NAMESPACE, Networking.CHANNEL_CONFIG_REQUEST);
     private static final String RESET_CHANNEL = "%s:%s".formatted(Networking.NAMESPACE, Networking.CHANNEL_RESET);
     @Getter
     private static ResourceHack instance;
@@ -42,7 +42,9 @@ public class ResourceHack extends JavaPlugin implements PacketListener {
         getSLF4JLogger().info("Encoded configuration to {} bytes", clientConfigData.length);
 
         // Register packet listener
-        PacketEvents.getAPI().getEventManager().registerListener(this, PacketListenerPriority.HIGH);
+        Messenger msg = Bukkit.getMessenger();
+        msg.registerIncomingPluginChannel(this, CONFIG_REQUEST_CHANNEL, this);
+        msg.registerOutgoingPluginChannel(this, CONFIG_CHANNEL);
 
         // Register command
         Bukkit.getCommandMap().register(getName(), new EncryptCommand());
@@ -57,13 +59,11 @@ public class ResourceHack extends JavaPlugin implements PacketListener {
     }
 
     @Override
-    public void onPacketReceive(PacketReceiveEvent event) {
-        if (event.getPacketType() == PacketType.Play.Client.PLUGIN_MESSAGE) {
-            WrapperPlayClientPluginMessage pkt = new WrapperPlayClientPluginMessage(event);
-            if (pkt.getChannelName().equals(CONFIG_CHANNEL)) {
-                getSLF4JLogger().info("Received configuration request, sending configuration to {}", event.getUser().getName());
-                event.getUser().sendPacket(new WrapperPlayServerPluginMessage(CONFIG_CHANNEL, clientConfigData));
-            }
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] bytes) {
+        if (channel.equals(CONFIG_REQUEST_CHANNEL)) {
+            getSLF4JLogger().info("Sending configurations to %s".formatted(player.getName()));
+//            player.sendPluginMessage(this, CONFIG_CHANNEL, this.clientConfigData);
+            PacketEvents.getAPI().getPlayerManager().getUser(player).sendPacket(new WrapperPlayServerPluginMessage(CONFIG_CHANNEL, this.clientConfigData));
         }
     }
 }

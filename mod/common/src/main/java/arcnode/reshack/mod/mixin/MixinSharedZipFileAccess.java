@@ -2,6 +2,7 @@ package arcnode.reshack.mod.mixin;
 
 import arcnode.reshack.mod.ResourceHack;
 import arcnode.reshack.mod.access.ForgeAccessHack;
+import com.google.common.hash.Hashing;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,11 +17,12 @@ import java.util.zip.ZipFile;
 
 @Mixin(targets = "net.minecraft.server.packs.FilePackResources$SharedZipFileAccess")
 public class MixinSharedZipFileAccess {
-    @Shadow @Final private File file;
+    @Shadow @Final File file;
 
     @Inject(
             method = "getOrCreateZipFile",
-            at = @At(value = "NEW", target = "(Ljava/io/File;)Ljava/util/zip/ZipFile;")
+            at = @At(value = "NEW", target = "(Ljava/io/File;)Ljava/util/zip/ZipFile;"),
+            cancellable = true
     )
     public void injectGetOrCreateZipFile(CallbackInfoReturnable<ZipFile> cir) {
         try {
@@ -35,7 +37,11 @@ public class MixinSharedZipFileAccess {
             }
 
             byte[] original = Files.readAllBytes(this.file.toPath());
-            if (ForgeAccessHack.accessValidate(original)) {
+
+            File cached = ResourceHack.getDecryptedPackCache().get(this.file.getAbsolutePath());
+            if (cached != null) {
+                cir.setReturnValue(new ZipFile(cached));
+            } else if (ForgeAccessHack.accessValidate(original)) {
                 // Generate random file name
                 String yee = UUID.randomUUID().toString();
                 File tmp = File.createTempFile(yee.substring(0, 8), null);
@@ -47,6 +53,11 @@ public class MixinSharedZipFileAccess {
                 // Complete
                 cir.setReturnValue(new ZipFile(tmp));
                 ResourceHack.LOG.info("Resource decryption completed");
+                tmp.deleteOnExit();
+
+                // Put cache
+                ResourceHack.getDecryptedPackCache().put(this.file.getAbsolutePath(), tmp);
+                ResourceHack.LOG.info("Put cache for {}", this.file.getAbsolutePath());
             }
         } catch (Throwable t) {
             throw new RuntimeException("(ResHack) Error processing resources", t);

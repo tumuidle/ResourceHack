@@ -1,16 +1,15 @@
 {
   "required": true,
   "package": "arcnode.reshack.mod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
     "MixinClientCommonPacketListenerImpl",
-    "MixinClientPacketListener"
+    "MixinServerPackManager"
   ],
   "mixins": [
-    "MixinClientboundCustomPayloadPacket",
     "MixinConnection",
-    "MixinFilePackResource",
+    "MixinDownloadPackSource",
     "MixinSharedZipFileAccess"
   ],
   "injectors": {
