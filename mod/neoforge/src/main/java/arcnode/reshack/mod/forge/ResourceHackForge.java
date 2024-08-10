@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 public final class ResourceHackForge {
     public ResourceHackForge() {
         // Run our common setup.
-        ResourceHack.init();
+//        ResourceHack.init();
         NeoForge.EVENT_BUS.register(this);
     }
 
