@@ -28,3 +28,11 @@ Install the mod, no more configurations needed
 3. Restart server or reload the plugin
 4. Use `res-encrypt <path>` (Requires `reshack.encrypt` permission) command to encrypt your resource pack
 5. Configure your server resource pack loading (ItemsAdder, Nova, JResourcePack, server.properties, etc.)
+
+<div align="center"><h2>Building</h2></div>
+
+**Fabric**: `gradlew :mod:fabric:build`
+
+**NeoForge**: `gradlew :mod:neoforge:build`
+
+**Server**: `gradlew :server:shadowJar`
