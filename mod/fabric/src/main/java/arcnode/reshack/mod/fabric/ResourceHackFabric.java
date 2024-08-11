@@ -1,6 +1,7 @@
 package arcnode.reshack.mod.fabric;
 
-import arcnode.reshack.common.ConfigData;
+import arcnode.reshack.mod.ConfigurationPayload;
+import arcnode.reshack.mod.ConfigurationRequestPayload;
 import arcnode.reshack.mod.IResourceHackPlatform;
 import arcnode.reshack.mod.ResourceHack;
 import net.fabricmc.api.ClientModInitializer;
@@ -8,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

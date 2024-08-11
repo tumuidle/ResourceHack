@@ -1,8 +1,7 @@
-package arcnode.reshack.mod.fabric;
+package arcnode.reshack.mod;
 
 import arcnode.reshack.common.ConfigData;
 import arcnode.reshack.common.Networking;
-import arcnode.reshack.mod.ResourceHack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
