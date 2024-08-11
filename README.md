@@ -2,11 +2,11 @@
 <h1>ResourceHack</h1>
 Minecraft server resource pack protection tool
 
-![Minecraft Version](https://img.shields.io/badge/Minecraft_Version-1.20.1-green?style=for-the-badge)
+![Minecraft Version](https://img.shields.io/badge/Minecraft_Version-1.21.1-green?style=for-the-badge)
 
 <img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg">
 <img alt="fabric" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/fabric_vector.svg">
-<img alt="forge" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/forge_vector.svg">
+<img alt="forge" height="40" src="https://cdn.jsdelivr.net/gh/TheReal-Flo/devins-badges@neoforge/assets/compact/supported/neoforge_vector.svg">
 </div>
 
 <!-- Part: Features -->
@@ -28,3 +28,11 @@ Install the mod, no more configurations needed
 3. Restart server or reload the plugin
 4. Use `res-encrypt <path>` (Requires `reshack.encrypt` permission) command to encrypt your resource pack
 5. Configure your server resource pack loading (ItemsAdder, Nova, JResourcePack, server.properties, etc.)
+
+<div align="center"><h2>Building</h2></div>
+
+**Fabric**: `gradlew :mod:fabric:build`
+
+**NeoForge**: `gradlew :mod:neoforge:build`
+
+**Server**: `gradlew :server:shadowJar`
